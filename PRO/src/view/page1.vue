@@ -8,14 +8,14 @@
                   <el-popover
                     placement="top"
                     width="150"
-                    trigger="hover"
+                    trigger="click"
                     :key="index"
                     :disabled="!i.id"
                   >
                     <ul>
                       <li @click="addSubMenu(i.id)">添加</li>
                       <template v-for="(item, inIndex) in i.subMenu">
-                        <li :key="inIndex" @click="showSubMenu(inIndex)" :class="{'tab-active': inIndex === secondMenuIndex}">
+                        <li :key="inIndex" @click="showSubMenu(inIndex)" :class="{'sub-active': inIndex === secondMenuIndex}">
                             {{item.name}}
                         </li>
                       </template>
@@ -114,21 +114,23 @@ export default {
     },
     save () {
       // 校验处
-      // let flag = false
-      // if (!this.form.id) { // 创建
-      //   if (this.form.level === 2 && this.menuArr[this.menuIndex].subMenu.length > 0) {
-      //     for (let value of this.menuArr[this.menuIndex].subMenu) {
-      //       if (value.dis === this.form.dis) {
-      //         flag = true
-      //         alert('该顺序已经存在')
-      //         break
-      //       }
-      //     }
-      //   }
-      // }
-      // if (flag) {
-      //   return
-      // }
+      let flag = false
+      if (this.form.level === 2 && this.menuArr[this.menuIndex].subMenu.length > 0) {
+        for (let value of this.menuArr[this.menuIndex].subMenu) {
+          if (value.dis === this.form.dis) {
+            flag = true
+            break
+          }
+        }
+      }
+      if (flag) {
+        if (this.secondMenuIndex < 0) {
+          alert('该顺序已经存在')
+          return
+        } else { // 修改
+          // 待定
+        }
+      }
       //
       //
       // 调取接口
@@ -151,11 +153,11 @@ export default {
           //
           //
           this.menuArr[this.menuIndex].subMenu.push(JSON.parse(JSON.stringify(this.form)))
-          // this.secondMenuIndex = this.menuArr[this.menuIndex].subMenu.length - 1
-          // this.form.id = null
-          // this.form.name = ''
-          // this.form.dis = 1
-          // this.form.level = 1
+          // this.secondMenuIndex = -1
+          this.form.id = null
+          this.form.name = ''
+          this.form.dis = 1
+          // this.form.level = 2
           // this.form.pId = 0
         }
       }
@@ -211,6 +213,9 @@ export default {
     }
     .tab-active {
       background-color: #ddd;
+    }
+    .sub-active {
+      color: red;
     }
   }
 </style>
